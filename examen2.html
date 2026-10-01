@@ -1,0 +1,2834 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<title>Examen Final — Tecnología Digital</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f3f4f6;
+    color: #111827;
+    overflow-x: hidden;
+}
+
+button,
+input {
+    font: inherit;
+}
+
+/* =========================
+   PANTALLA INICIAL
+========================= */
+
+.start-screen {
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background:
+        radial-gradient(circle at top left, #374151, transparent 40%),
+        linear-gradient(135deg, #111827, #1f2937);
+}
+
+.start-card {
+    width: min(700px, 100%);
+    background: white;
+    border-radius: 22px;
+    padding: 42px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.25);
+    text-align: center;
+}
+
+.start-card h1 {
+    margin: 0 0 10px;
+    font-size: clamp(28px, 5vw, 42px);
+}
+
+.start-card p {
+    color: #6b7280;
+    line-height: 1.6;
+}
+
+.exam-info {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 28px 0;
+}
+
+.info-box {
+    background: #f3f4f6;
+    border-radius: 14px;
+    padding: 16px 10px;
+}
+
+.info-box strong {
+    display: block;
+    font-size: 23px;
+    margin-bottom: 5px;
+}
+
+.info-box span {
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.start-button {
+    width: 100%;
+    border: 0;
+    border-radius: 14px;
+    padding: 17px;
+    background: #111827;
+    color: white;
+    font-weight: bold;
+    font-size: 17px;
+    cursor: pointer;
+}
+
+.start-button:hover {
+    background: #374151;
+}
+
+/* =========================
+   EXAMEN
+========================= */
+
+.exam-screen {
+    display: none;
+    min-height: 100dvh;
+}
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    min-height: 72px;
+    background: #111827;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding:
+        12px
+        max(18px, env(safe-area-inset-right))
+        12px
+        max(18px, env(safe-area-inset-left));
+}
+
+.topbar-title {
+    font-weight: bold;
+    font-size: 17px;
+}
+
+.topbar-progress {
+    font-size: 14px;
+    color: #d1d5db;
+    text-align: right;
+}
+
+.exam-layout {
+    display: grid;
+    grid-template-columns: 290px minmax(0, 1fr);
+    min-height: calc(100dvh - 72px);
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar {
+    background: white;
+    border-right: 1px solid #e5e7eb;
+    padding: 22px;
+    position: sticky;
+    top: 72px;
+    height: calc(100dvh - 72px);
+    overflow-y: auto;
+}
+
+.sidebar h2 {
+    font-size: 17px;
+    margin: 0 0 5px;
+}
+
+.sidebar-description {
+    color: #6b7280;
+    font-size: 13px;
+    margin-bottom: 18px;
+}
+
+.question-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+}
+
+.question-number {
+    min-width: 0;
+    min-height: 42px;
+    border: 1px solid #d1d5db;
+    background: #f9fafb;
+    color: #374151;
+    border-radius: 9px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.question-number:hover {
+    background: #e5e7eb;
+}
+
+.question-number.current {
+    background: #111827;
+    color: white;
+    border-color: #111827;
+}
+
+.question-number.answered {
+    border-color: #10b981;
+}
+
+.question-number.current.answered {
+    background: #111827;
+    border-color: #10b981;
+}
+
+/* =========================
+   CONTENIDO
+========================= */
+
+.main-content {
+    min-width: 0;
+    padding: 30px;
+}
+
+.question-card {
+    width: min(900px, 100%);
+    margin: 0 auto;
+    background: white;
+    border-radius: 18px;
+    box-shadow: 0 8px 30px rgba(0,0,0,.08);
+    overflow: hidden;
+}
+
+.question-header {
+    padding: 22px 26px;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.question-type {
+    display: inline-block;
+    background: #e5e7eb;
+    color: #374151;
+    padding: 7px 11px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.question-counter {
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.question-body {
+    padding: 32px 30px;
+}
+
+.question-text {
+    font-size: 19px;
+    line-height: 1.65;
+    font-weight: 600;
+    margin: 0 0 28px;
+}
+
+/* =========================
+   OPCIONES
+========================= */
+
+.options {
+    display: grid;
+    gap: 12px;
+}
+
+.option {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    min-height: 58px;
+    padding: 13px 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 13px;
+    cursor: pointer;
+    transition: .15s;
+}
+
+.option:hover {
+    border-color: #9ca3af;
+    background: #f9fafb;
+}
+
+.option input {
+    width: 19px;
+    height: 19px;
+    flex-shrink: 0;
+}
+
+.option.selected {
+    border-color: #111827;
+    background: #f3f4f6;
+}
+
+/* =========================
+   DRAG & DROP
+========================= */
+
+.drag-instruction {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    padding: 13px 15px;
+    border-radius: 12px;
+    color: #6b7280;
+    font-size: 14px;
+    margin-bottom: 18px;
+}
+
+.drag-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.drag-options {
+    display: grid;
+    gap: 10px;
+    align-content: start;
+}
+
+.drag-item {
+    min-height: 52px;
+    padding: 14px;
+    border: 2px solid #d1d5db;
+    background: white;
+    border-radius: 11px;
+    cursor: grab;
+    font-weight: 600;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+}
+
+.drag-item:active,
+.drag-item.dragging {
+    cursor: grabbing;
+    opacity: .65;
+    transform: scale(.98);
+    border-color: #111827;
+}
+
+.drop-zones {
+    display: grid;
+    gap: 10px;
+    align-content: start;
+}
+
+.drop-zone {
+    min-height: 70px;
+    border: 2px dashed #9ca3af;
+    border-radius: 11px;
+    padding: 12px;
+    background: #f9fafb;
+    transition: .15s;
+    touch-action: none;
+}
+
+.drop-zone.drag-over {
+    border-color: #111827;
+    background: #eef2ff;
+}
+
+.drop-title {
+    color: #6b7280;
+    font-size: 12px;
+    margin-bottom: 6px;
+}
+
+.drop-content {
+    font-weight: 600;
+}
+
+.remove-answer {
+    border: 0;
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 5px 8px;
+    border-radius: 6px;
+    margin-top: 7px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+/* =========================
+   NAVEGACIÓN
+========================= */
+
+.navigation {
+    width: min(900px, 100%);
+    margin: 20px auto 0;
+    display: flex;
+    gap: 12px;
+}
+
+.nav-button {
+    min-height: 50px;
+    padding: 12px 20px;
+    border-radius: 11px;
+    border: 1px solid #d1d5db;
+    background: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.nav-button:hover {
+    background: #f3f4f6;
+}
+
+.nav-button.primary {
+    margin-left: auto;
+    background: #111827;
+    color: white;
+    border-color: #111827;
+}
+
+.nav-button.primary:hover {
+    background: #374151;
+}
+
+.nav-button.finish {
+    background: #065f46;
+    color: white;
+    border-color: #065f46;
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    background: rgba(0,0,0,.6);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal {
+    width: min(500px, 100%);
+    background: white;
+    border-radius: 18px;
+    padding: 28px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.3);
+}
+
+.modal h2 {
+    margin-top: 0;
+}
+
+.modal p {
+    color: #6b7280;
+    line-height: 1.6;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+.modal-button {
+    flex: 1;
+    min-height: 48px;
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+    background: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.modal-button.confirm {
+    background: #111827;
+    color: white;
+    border-color: #111827;
+}
+
+/* =========================
+   RESULTADOS
+========================= */
+
+.results-screen {
+    display: none;
+    min-height: 100dvh;
+    background: #f3f4f6;
+    padding: 30px 18px;
+}
+
+.results-card {
+    width: min(1000px, 100%);
+    margin: 0 auto;
+    background: white;
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 10px 40px rgba(0,0,0,.08);
+}
+
+.results-card h1 {
+    margin-top: 0;
+}
+
+.result-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 25px 0 35px;
+}
+
+.result-stat {
+    padding: 20px;
+    border-radius: 13px;
+    background: #f9fafb;
+    text-align: center;
+}
+
+.result-stat strong {
+    display: block;
+    font-size: 28px;
+    margin-bottom: 6px;
+}
+
+.result-stat span {
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.review {
+    display: grid;
+    gap: 14px;
+}
+
+.review-question {
+    border: 1px solid #e5e7eb;
+    border-radius: 13px;
+    padding: 18px;
+}
+
+.review-question.correct {
+    border-left: 5px solid #10b981;
+}
+
+.review-question.wrong {
+    border-left: 5px solid #ef4444;
+}
+
+.review-question.blank {
+    border-left: 5px solid #9ca3af;
+}
+
+.review-number {
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.review-text {
+    line-height: 1.5;
+    margin-bottom: 12px;
+}
+
+.review-answer {
+    padding: 9px 12px;
+    background: #f9fafb;
+    border-radius: 8px;
+    margin-top: 6px;
+}
+
+.restart-button {
+    width: 100%;
+    margin-top: 25px;
+    padding: 15px;
+    border: 0;
+    border-radius: 11px;
+    background: #111827;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* =========================
+   MÓVIL
+========================= */
+
+@media (max-width: 850px) {
+
+    .topbar {
+        min-height: 64px;
+    }
+
+    .topbar-title {
+        font-size: 15px;
+    }
+
+    .topbar-progress {
+        font-size: 12px;
+    }
+
+    .exam-layout {
+        display: block;
+    }
+
+    .sidebar {
+        position: sticky;
+        top: 64px;
+        z-index: 90;
+        height: auto;
+        max-height: none;
+        border-right: 0;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 12px 14px;
+    }
+
+    .sidebar h2 {
+        font-size: 15px;
+    }
+
+    .sidebar-description {
+        display: none;
+    }
+
+    .question-grid {
+        grid-template-columns: repeat(9, minmax(30px, 1fr));
+        gap: 5px;
+    }
+
+    .question-number {
+        min-height: 38px;
+        border-radius: 7px;
+        font-size: 12px;
+    }
+
+    .main-content {
+        padding: 16px;
+    }
+
+    .question-card {
+        border-radius: 15px;
+    }
+
+    .question-header {
+        padding: 16px 18px;
+    }
+
+    .question-body {
+        padding: 22px 18px;
+    }
+
+    .question-text {
+        font-size: 17px;
+        line-height: 1.55;
+    }
+
+    .option {
+        min-height: 58px;
+    }
+
+    .drag-container {
+        grid-template-columns: 1fr;
+    }
+
+    .navigation {
+        position: sticky;
+        bottom: 0;
+        z-index: 80;
+        margin-top: 15px;
+        padding:
+            10px
+            max(10px, env(safe-area-inset-right))
+            calc(10px + env(safe-area-inset-bottom))
+            max(10px, env(safe-area-inset-left));
+        background: rgba(243,244,246,.96);
+        backdrop-filter: blur(8px);
+    }
+
+    .nav-button {
+        flex: 1;
+        padding: 10px 8px;
+        min-height: 50px;
+    }
+
+    .nav-button.primary {
+        margin-left: 0;
+    }
+
+    .result-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .results-card {
+        padding: 22px 17px;
+    }
+}
+
+/* =========================
+   TELÉFONOS PEQUEÑOS
+========================= */
+
+@media (max-width: 600px) {
+
+    .start-screen {
+        padding: 14px;
+    }
+
+    .start-card {
+        padding: 28px 20px;
+        border-radius: 18px;
+    }
+
+    .exam-info {
+        grid-template-columns: 1fr;
+    }
+
+    .info-box {
+        padding: 13px;
+    }
+
+    .question-grid {
+        grid-template-columns: repeat(6, minmax(38px, 1fr));
+    }
+
+    .question-number {
+        min-height: 40px;
+        font-size: 13px;
+    }
+
+    .question-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .question-body {
+        padding: 20px 15px;
+    }
+
+    .question-text {
+        font-size: 17px;
+    }
+
+    .option {
+        padding: 12px;
+    }
+
+    .modal-buttons {
+        flex-direction: column;
+    }
+
+    .result-stats {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     INICIO
+========================= -->
+
+<section class="start-screen" id="startScreen">
+
+    <div class="start-card">
+
+        <h1>Examen Final</h1>
+
+        <h2>Tecnología Digital</h2>
+
+        <p>
+            Responde las 45 preguntas. Puedes avanzar, retroceder
+            y cambiar tus respuestas antes de finalizar.
+        </p>
+
+        <div class="exam-info">
+
+            <div class="info-box">
+                <strong>45</strong>
+                <span>Preguntas</span>
+            </div>
+
+            <div class="info-box">
+                <strong>3</strong>
+                <span>Tipos</span>
+            </div>
+
+            <div class="info-box">
+                <strong>Final</strong>
+                <span>Resultado</span>
+            </div>
+
+        </div>
+
+        <button class="start-button" onclick="startExam()">
+            Comenzar examen
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     EXAMEN
+========================= -->
+
+<section class="exam-screen" id="examScreen">
+
+    <header class="topbar">
+
+        <div class="topbar-title">
+            Tecnología Digital
+        </div>
+
+        <div class="topbar-progress" id="topProgress">
+            Pregunta 1 de 45
+        </div>
+
+    </header>
+
+
+    <div class="exam-layout">
+
+        <aside class="sidebar">
+
+            <h2>Preguntas</h2>
+
+            <div class="sidebar-description">
+                Selecciona cualquier número para ir directamente a esa pregunta.
+            </div>
+
+            <div class="question-grid" id="questionGrid"></div>
+
+        </aside>
+
+
+        <main class="main-content">
+
+            <div class="question-card">
+
+                <div class="question-header">
+
+                    <span class="question-type" id="questionType">
+                        Verdadero / Falso
+                    </span>
+
+                    <span class="question-counter" id="questionCounter">
+                        1 / 45
+                    </span>
+
+                </div>
+
+                <div class="question-body">
+
+                    <p class="question-text" id="questionText"></p>
+
+                    <div id="answerArea"></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="navigation">
+
+                <button
+                    class="nav-button"
+                    id="previousButton"
+                    onclick="previousQuestion()"
+                >
+                    ← Anterior
+                </button>
+
+                <button
+                    class="nav-button primary"
+                    id="nextButton"
+                    onclick="nextQuestion()"
+                >
+                    Siguiente →
+                </button>
+
+            </div>
+
+        </main>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     MODAL FINALIZAR
+========================= -->
+
+<div class="modal-overlay" id="finishModal">
+
+    <div class="modal">
+
+        <h2>¿Finalizar examen?</h2>
+
+        <p id="finishMessage">
+            Revisa tus respuestas antes de terminar.
+        </p>
+
+        <div class="modal-buttons">
+
+            <button
+                class="modal-button"
+                onclick="closeFinishModal()"
+            >
+                Seguir respondiendo
+            </button>
+
+            <button
+                class="modal-button confirm"
+                onclick="submitExam()"
+            >
+                Finalizar
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     RESULTADOS
+========================= -->
+
+<section class="results-screen" id="resultsScreen">
+
+    <div class="results-card">
+
+        <h1>Resultado del examen</h1>
+
+        <p>
+            Aquí puedes revisar tus respuestas y compararlas con las respuestas correctas.
+        </p>
+
+        <div class="result-stats">
+
+            <div class="result-stat">
+                <strong id="scoreCorrect">0</strong>
+                <span>Correctas</span>
+            </div>
+
+            <div class="result-stat">
+                <strong id="scoreWrong">0</strong>
+                <span>Incorrectas</span>
+            </div>
+
+            <div class="result-stat">
+                <strong id="scoreBlank">0</strong>
+                <span>Sin responder</span>
+            </div>
+
+            <div class="result-stat">
+                <strong id="scorePercent">0%</strong>
+                <span>Porcentaje</span>
+            </div>
+
+        </div>
+
+        <h2>Revisión</h2>
+
+        <div class="review" id="review"></div>
+
+        <button
+            class="restart-button"
+            onclick="restartExam()"
+        >
+            Volver a comenzar
+        </button>
+
+    </div>
+
+</section>
+
+
+<script>
+
+/* =========================================================
+   PREGUNTAS
+========================================================= */
+
+const questions = [
+
+    /* =========================
+       VERDADERO / FALSO
+    ========================= */
+
+    {
+        n: 1,
+        type: "vf",
+        text: "La CPU es el componente encargado de procesar instrucciones y realizar operaciones necesarias para que los programas puedan ejecutarse. Por esta razón, se considera una parte fundamental del procesamiento de una computadora.",
+        answer: true
+    },
+
+    {
+        n: 2,
+        type: "vf",
+        text: "La memoria RAM almacena permanentemente los archivos aunque la computadora se apague.",
+        answer: false
+    },
+
+    {
+        n: 3,
+        type: "vf",
+        text: "El disco duro y las unidades SSD se utilizan para almacenar información de manera permanente.",
+        answer: true
+    },
+
+    {
+        n: 4,
+        type: "vf",
+        text: "El botón izquierdo del mouse se utiliza normalmente para seleccionar elementos y realizar acciones como hacer doble clic.",
+        answer: true
+    },
+
+    {
+        n: 5,
+        type: "vf",
+        text: "El botón derecho del mouse se utiliza principalmente para mostrar menús contextuales.",
+        answer: true
+    },
+
+    {
+        n: 6,
+        type: "vf",
+        text: "El código Alt 160 corresponde a la letra á en el sistema de códigos estudiado.",
+        answer: true
+    },
+
+    {
+        n: 7,
+        type: "vf",
+        text: "Un byte está formado por 4 bits.",
+        answer: false
+    },
+
+    {
+        n: 8,
+        type: "vf",
+        text: "Un kilobyte equivale a 1024 bytes según las unidades utilizadas en el curso.",
+        answer: true
+    },
+
+    {
+        n: 9,
+        type: "vf",
+        text: "La tarjeta madre permite conectar y comunicar diferentes componentes internos de la computadora.",
+        answer: true
+    },
+
+    {
+        n: 10,
+        type: "vf",
+        text: "Un firewall permite revisar y controlar el tráfico de red de acuerdo con determinadas reglas.",
+        answer: true
+    },
+
+    {
+        n: 11,
+        type: "vf",
+        text: "HDMI es un tipo de puerto utilizado para transmitir audio y video.",
+        answer: true
+    },
+
+    {
+        n: 12,
+        type: "vf",
+        text: "VGA es un puerto utilizado tradicionalmente para transmitir señal de video.",
+        answer: true
+    },
+
+    {
+        n: 13,
+        type: "vf",
+        text: "La combinación Ctrl + C se utiliza normalmente para copiar información.",
+        answer: true
+    },
+
+    {
+        n: 14,
+        type: "vf",
+        text: "La combinación Ctrl + Z se utiliza normalmente para deshacer una acción.",
+        answer: true
+    },
+
+    {
+        n: 15,
+        type: "vf",
+        text: "Windows + L permite bloquear la computadora.",
+        answer: true
+    },
+
+
+    /* =========================
+       SELECCIÓN MÚLTIPLE
+    ========================= */
+
+    {
+        n: 16,
+        type: "mc",
+        text: "¿Cuál componente procesa las instrucciones de los programas?",
+        options: [
+            "CPU",
+            "Mouse",
+            "Monitor",
+            "Teclado"
+        ],
+        answer: 0
+    },
+
+    {
+        n: 17,
+        type: "mc",
+        text: "¿Cuál componente almacena temporalmente los datos que están siendo utilizados por los programas?",
+        options: [
+            "RAM",
+            "HDD",
+            "Fuente de alimentación",
+            "Monitor"
+        ],
+        answer: 0
+    },
+
+    {
+        n: 18,
+        type: "mc",
+        text: "¿Cuál de las siguientes unidades representa la mayor cantidad de información?",
+        options: [
+            "KB",
+            "MB",
+            "GB",
+            "TB"
+        ],
+        answer: 3
+    },
+
+    {
+        n: 19,
+        type: "mc",
+        text: "¿Cuántos bits forman un byte?",
+        options: [
+            "2",
+            "4",
+            "8",
+            "16"
+        ],
+        answer: 2
+    },
+
+    {
+        n: 20,
+        type: "mc",
+        text: "¿Cuántos megabytes equivalen a 2 GB utilizando 1 GB = 1024 MB?",
+        options: [
+            "1024 MB",
+            "2048 MB",
+            "2000 MB",
+            "4096 MB"
+        ],
+        answer: 1
+    },
+
+    {
+        n: 21,
+        type: "mc",
+        text: "¿Qué combinación se utiliza normalmente para copiar?",
+        options: [
+            "Ctrl + X",
+            "Ctrl + V",
+            "Ctrl + C",
+            "Ctrl + Z"
+        ],
+        answer: 2
+    },
+
+    {
+        n: 22,
+        type: "mc",
+        text: "¿Qué combinación se utiliza normalmente para pegar?",
+        options: [
+            "Ctrl + V",
+            "Ctrl + C",
+            "Ctrl + S",
+            "Alt + Tab"
+        ],
+        answer: 0
+    },
+
+    {
+        n: 23,
+        type: "mc",
+        text: "¿Qué combinación se utiliza normalmente para cortar?",
+        options: [
+            "Ctrl + X",
+            "Ctrl + Z",
+            "Ctrl + A",
+            "Ctrl + P"
+        ],
+        answer: 0
+    },
+
+    {
+        n: 24,
+        type: "mc",
+        text: "¿Qué combinación permite cambiar entre ventanas abiertas?",
+        options: [
+            "Win + D",
+            "Alt + Tab",
+            "Ctrl + S",
+            "Win + E"
+        ],
+        answer: 1
+    },
+
+    {
+        n: 25,
+        type: "mc",
+        text: "¿Qué combinación abre el Explorador de archivos de Windows?",
+        options: [
+            "Win + E",
+            "Win + R",
+            "Win + L",
+            "Ctrl + E"
+        ],
+        answer: 0
+    },
+
+    {
+        n: 26,
+        type: "mc",
+        text: "¿Qué tecla permite normalmente renombrar un archivo seleccionado?",
+        options: [
+            "F1",
+            "F2",
+            "F5",
+            "F12"
+        ],
+        answer: 1
+    },
+
+    {
+        n: 27,
+        type: "mc",
+        text: "¿Dónde se puede activar la propiedad de archivo oculto?",
+        options: [
+            "Propiedades del archivo",
+            "Calculadora",
+            "Administrador de tareas únicamente",
+            "Papelera de reciclaje"
+        ],
+        answer: 0
+    },
+
+    {
+        n: 28,
+        type: "mc",
+        text: "¿Cuál de estos es un dispositivo de entrada?",
+        options: [
+            "Monitor",
+            "Impresora",
+            "Teclado",
+            "Proyector"
+        ],
+        answer: 2
+    },
+
+    {
+        n: 29,
+        type: "mc",
+        text: "¿Cuál de estos es un dispositivo de salida?",
+        options: [
+            "Mouse",
+            "Teclado",
+            "Monitor",
+            "Micrófono"
+        ],
+        answer: 2
+    },
+
+    {
+        n: 30,
+        type: "mc",
+        text: "¿Cuál componente se encarga de suministrar energía eléctrica a los componentes internos?",
+        options: [
+            "Fuente de alimentación",
+            "RAM",
+            "CPU",
+            "Disco duro"
+        ],
+        answer: 0
+    },
+
+    {
+        n: 31,
+        type: "mc",
+        text: "¿Cuál componente se utiliza principalmente para procesar gráficos?",
+        options: [
+            "GPU",
+            "RAM",
+            "Fuente de alimentación",
+            "Teclado"
+        ],
+        answer: 0
+    },
+
+    {
+        n: 32,
+        type: "mc",
+        text: "¿Cuál puerto se utiliza comúnmente para conectar dispositivos mediante una conexión de red cableada?",
+        options: [
+            "Ethernet",
+            "HDMI",
+            "VGA",
+            "3.5 mm"
+        ],
+        answer: 0
+    },
+
+    {
+        n: 33,
+        type: "mc",
+        text: "¿Cuál puerto se utiliza normalmente para conectar audífonos o dispositivos de audio analógico?",
+        options: [
+            "Ethernet",
+            "VGA",
+            "3.5 mm",
+            "HDMI"
+        ],
+        answer: 2
+    },
+
+    {
+        n: 34,
+        type: "mc",
+        text: "¿Qué combinación abre normalmente la aplicación Configuración de Windows?",
+        options: [
+            "Win + I",
+            "Win + L",
+            "Win + E",
+            "Win + D"
+        ],
+        answer: 0
+    },
+
+    {
+        n: 35,
+        type: "mc",
+        text: "¿Qué combinación abre directamente el Administrador de tareas?",
+        options: [
+            "Ctrl + Shift + Esc",
+            "Ctrl + C",
+            "Alt + Tab",
+            "Win + R"
+        ],
+        answer: 0
+    },
+
+
+    /* =========================
+       ARRASTRAR
+    ========================= */
+
+    {
+        n: 36,
+        type: "drag",
+        text: "Relaciona cada definición con la parte interna correspondiente del disco duro.",
+        pairs: [
+            ["Parte que lee y escribe información sobre la superficie del disco.", "Cabezal"],
+            ["Superficie de uno de los lados de un plato magnético.", "Cara"],
+            ["Línea circular sobre la superficie de un plato magnético.", "Pista"],
+            ["Disco circular donde se almacena magnéticamente la información.", "Plato magnético"],
+            ["Unidad de almacenamiento formada por un conjunto de sectores.", "Cluster"],
+            ["Conjunto de pistas que tienen la misma posición radial en varios platos.", "Cilindro"]
+        ]
+    },
+
+    {
+        n: 37,
+        type: "drag",
+        text: "Relaciona cada definición con la parte interna correspondiente del disco duro.",
+        pairs: [
+            ["Superficie de uno de los lados de un plato magnético.", "Cara"],
+            ["Parte que lee y escribe información sobre la superficie del disco.", "Cabezal"],
+            ["Conjunto de pistas que tienen la misma posición radial en varios platos.", "Cilindro"],
+            ["Línea circular sobre la superficie de un plato magnético.", "Pista"],
+            ["Unidad de almacenamiento formada por un conjunto de sectores.", "Cluster"],
+            ["Disco circular donde se almacena magnéticamente la información.", "Plato magnético"]
+        ]
+    },
+
+    {
+        n: 38,
+        type: "drag",
+        text: "Relaciona cada definición con la parte interna correspondiente del disco duro.",
+        pairs: [
+            ["Línea circular sobre la superficie de un plato magnético.", "Pista"],
+            ["Disco circular donde se almacena magnéticamente la información.", "Plato magnético"],
+            ["Superficie de uno de los lados de un plato magnético.", "Cara"],
+            ["Parte que lee y escribe información sobre la superficie del disco.", "Cabezal"],
+            ["Conjunto de pistas que tienen la misma posición radial en varios platos.", "Cilindro"],
+            ["Unidad de almacenamiento formada por un conjunto de sectores.", "Cluster"]
+        ]
+    },
+
+    {
+        n: 39,
+        type: "drag",
+        text: "Relaciona cada definición con la parte interna correspondiente del disco duro.",
+        pairs: [
+            ["Unidad de almacenamiento formada por un conjunto de sectores.", "Cluster"],
+            ["Parte que lee y escribe información sobre la superficie del disco.", "Cabezal"],
+            ["Línea circular sobre la superficie de un plato magnético.", "Pista"],
+            ["Conjunto de pistas que tienen la misma posición radial en varios platos.", "Cilindro"],
+            ["Superficie de uno de los lados de un plato magnético.", "Cara"],
+            ["Disco circular donde se almacena magnéticamente la información.", "Plato magnético"]
+        ]
+    },
+
+    {
+        n: 40,
+        type: "drag",
+        text: "Relaciona cada definición con la parte interna correspondiente del disco duro.",
+        pairs: [
+            ["Conjunto de pistas que tienen la misma posición radial en varios platos.", "Cilindro"],
+            ["Unidad de almacenamiento formada por un conjunto de sectores.", "Cluster"],
+            ["Disco circular donde se almacena magnéticamente la información.", "Plato magnético"],
+            ["Superficie de uno de los lados de un plato magnético.", "Cara"],
+            ["Parte que lee y escribe información sobre la superficie del disco.", "Cabezal"],
+            ["Línea circular sobre la superficie de un plato magnético.", "Pista"]
+        ]
+    },
+
+    {
+        n: 41,
+        type: "drag",
+        text: "Relaciona cada definición con la parte interna correspondiente del disco duro.",
+        pairs: [
+            ["Disco circular donde se almacena magnéticamente la información.", "Plato magnético"],
+            ["Línea circular sobre la superficie de un plato magnético.", "Pista"],
+            ["Parte que lee y escribe información sobre la superficie del disco.", "Cabezal"],
+            ["Unidad de almacenamiento formada por un conjunto de sectores.", "Cluster"],
+            ["Superficie de uno de los lados de un plato magnético.", "Cara"],
+            ["Conjunto de pistas que tienen la misma posición radial en varios platos.", "Cilindro"]
+        ]
+    },
+
+    {
+        n: 42,
+        type: "drag",
+        text: "Relaciona cada definición con el componente correspondiente.",
+        pairs: [
+            ["Memoria temporal utilizada por los programas mientras están funcionando.", "RAM"],
+            ["Unidad que almacena información de forma permanente.", "Disco / SSD"],
+            ["Componente relacionado con el procesamiento de gráficos.", "VGA"]
+        ]
+    },
+
+    {
+        n: 43,
+        type: "drag",
+        text: "Relaciona cada definición con el componente correspondiente.",
+        pairs: [
+            ["Unidad utilizada para almacenar archivos de forma permanente.", "Disco / SSD"],
+            ["Memoria temporal utilizada por los programas mientras están funcionando.", "RAM"],
+            ["Componente o conexión relacionada con la salida de video.", "VGA"]
+        ]
+    },
+
+    {
+        n: 44,
+        type: "drag",
+        text: "Relaciona cada definición con el componente correspondiente.",
+        pairs: [
+            ["Conexión utilizada tradicionalmente para transmitir señal de video.", "VGA"],
+            ["Memoria temporal utilizada por los programas mientras están funcionando.", "RAM"],
+            ["Unidad utilizada para almacenar archivos de forma permanente.", "Disco / SSD"]
+        ]
+    },
+
+    {
+        n: 45,
+        type: "drag",
+        text: "Relaciona cada definición con el concepto correspondiente.",
+        pairs: [
+            ["Sistema que controla y revisa el tráfico de red de acuerdo con determinadas reglas.", "Firewall"],
+            ["Memoria temporal utilizada por los programas mientras están funcionando.", "RAM"],
+            ["Unidad utilizada para almacenar información de forma permanente.", "Disco / SSD"]
+        ]
+    }
+
+];
+
+
+/* =========================================================
+   ESTADO
+========================================================= */
+
+let currentQuestion = 0;
+
+let answers = {};
+
+let submitted = false;
+
+
+/* =========================================================
+   ELEMENTOS
+========================================================= */
+
+const startScreen = document.getElementById("startScreen");
+const examScreen = document.getElementById("examScreen");
+const resultsScreen = document.getElementById("resultsScreen");
+
+const questionGrid = document.getElementById("questionGrid");
+
+const questionText = document.getElementById("questionText");
+const questionType = document.getElementById("questionType");
+const questionCounter = document.getElementById("questionCounter");
+
+const answerArea = document.getElementById("answerArea");
+
+const topProgress = document.getElementById("topProgress");
+
+const previousButton = document.getElementById("previousButton");
+const nextButton = document.getElementById("nextButton");
+
+
+/* =========================================================
+   INICIAR
+========================================================= */
+
+function startExam() {
+
+    startScreen.style.display = "none";
+
+    examScreen.style.display = "block";
+
+    resultsScreen.style.display = "none";
+
+    currentQuestion = 0;
+
+    answers = {};
+
+    submitted = false;
+
+    buildQuestionGrid();
+
+    renderQuestion();
+
+    window.scrollTo(0, 0);
+}
+
+
+/* =========================================================
+   GRID DE PREGUNTAS
+========================================================= */
+
+function buildQuestionGrid() {
+
+    questionGrid.innerHTML = "";
+
+    questions.forEach((question, index) => {
+
+        const button = document.createElement("button");
+
+        button.className = "question-number";
+
+        button.textContent = question.n;
+
+        button.onclick = () => {
+
+            currentQuestion = index;
+
+            renderQuestion();
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+
+        };
+
+        questionGrid.appendChild(button);
+
+    });
+
+    updateQuestionGrid();
+}
+
+
+function updateQuestionGrid() {
+
+    const buttons = document.querySelectorAll(".question-number");
+
+    buttons.forEach((button, index) => {
+
+        button.classList.toggle(
+            "current",
+            index === currentQuestion
+        );
+
+        button.classList.toggle(
+            "answered",
+            isAnswered(questions[index])
+        );
+
+    });
+
+}
+
+
+/* =========================================================
+   ¿ESTÁ RESPONDIDA?
+========================================================= */
+
+function isAnswered(question) {
+
+    if (!(question.n in answers)) {
+        return false;
+    }
+
+    if (question.type === "drag") {
+
+        const value = answers[question.n];
+
+        return value &&
+               Object.keys(value).length > 0 &&
+               Object.values(value).every(v => v);
+
+    }
+
+    return answers[question.n] !== undefined &&
+           answers[question.n] !== null;
+
+}
+
+
+/* =========================================================
+   RENDERIZAR PREGUNTA
+========================================================= */
+
+function renderQuestion() {
+
+    const question = questions[currentQuestion];
+
+    questionText.textContent = question.text;
+
+    questionCounter.textContent =
+        `${question.n} / ${questions.length}`;
+
+    topProgress.textContent =
+        `Pregunta ${question.n} de ${questions.length}`;
+
+    if (question.type === "vf") {
+
+        questionType.textContent =
+            "Verdadero / Falso";
+
+    } else if (question.type === "mc") {
+
+        questionType.textContent =
+            "Selección múltiple";
+
+    } else {
+
+        questionType.textContent =
+            "Arrastrar";
+
+    }
+
+    renderAnswerArea(question);
+
+    previousButton.disabled =
+        currentQuestion === 0;
+
+    previousButton.style.opacity =
+        currentQuestion === 0 ? ".5" : "1";
+
+    if (currentQuestion === questions.length - 1) {
+
+        nextButton.textContent =
+            "Finalizar examen";
+
+        nextButton.classList.add("finish");
+
+    } else {
+
+        nextButton.textContent =
+            "Siguiente →";
+
+        nextButton.classList.remove("finish");
+
+    }
+
+    updateQuestionGrid();
+
+}
+
+
+/* =========================================================
+   ÁREA DE RESPUESTA
+========================================================= */
+
+function renderAnswerArea(question) {
+
+    answerArea.innerHTML = "";
+
+    if (question.type === "vf") {
+
+        renderTrueFalse(question);
+
+    } else if (question.type === "mc") {
+
+        renderMultipleChoice(question);
+
+    } else {
+
+        renderDragQuestion(question);
+
+    }
+
+}
+
+
+/* =========================================================
+   VERDADERO / FALSO
+========================================================= */
+
+function renderTrueFalse(question) {
+
+    const options = document.createElement("div");
+
+    options.className = "options";
+
+    [
+        {
+            value: true,
+            text: "Verdadero"
+        },
+        {
+            value: false,
+            text: "Falso"
+        }
+    ].forEach(option => {
+
+        const label = document.createElement("label");
+
+        label.className = "option";
+
+        if (
+            answers[question.n] !== undefined &&
+            answers[question.n] === option.value
+        ) {
+            label.classList.add("selected");
+        }
+
+        const input = document.createElement("input");
+
+        input.type = "radio";
+
+        input.name = `question-${question.n}`;
+
+        input.checked =
+            answers[question.n] === option.value;
+
+        input.onchange = () => {
+
+            answers[question.n] = option.value;
+
+            renderQuestion();
+
+        };
+
+        const span = document.createElement("span");
+
+        span.textContent = option.text;
+
+        label.appendChild(input);
+
+        label.appendChild(span);
+
+        options.appendChild(label);
+
+    });
+
+    answerArea.appendChild(options);
+
+}
+
+
+/* =========================================================
+   SELECCIÓN MÚLTIPLE
+========================================================= */
+
+function renderMultipleChoice(question) {
+
+    const options = document.createElement("div");
+
+    options.className = "options";
+
+    question.options.forEach((option, index) => {
+
+        const label = document.createElement("label");
+
+        label.className = "option";
+
+        if (answers[question.n] === index) {
+
+            label.classList.add("selected");
+
+        }
+
+        const input = document.createElement("input");
+
+        input.type = "radio";
+
+        input.name = `question-${question.n}`;
+
+        input.checked =
+            answers[question.n] === index;
+
+        input.onchange = () => {
+
+            answers[question.n] = index;
+
+            renderQuestion();
+
+        };
+
+        const span = document.createElement("span");
+
+        span.textContent = option;
+
+        label.appendChild(input);
+
+        label.appendChild(span);
+
+        options.appendChild(label);
+
+    });
+
+    answerArea.appendChild(options);
+
+}
+
+
+/* =========================================================
+   ARRASTRAR
+========================================================= */
+
+function renderDragQuestion(question) {
+
+    const wrapper = document.createElement("div");
+
+    const instruction = document.createElement("div");
+
+    instruction.className = "drag-instruction";
+
+    instruction.textContent =
+        "Arrastra cada opción hasta la definición correspondiente. En iPhone/iPad también puedes mantener presionada una opción y arrastrarla.";
+
+    wrapper.appendChild(instruction);
+
+
+    const container = document.createElement("div");
+
+    container.className = "drag-container";
+
+
+    const optionsColumn = document.createElement("div");
+
+    optionsColumn.className = "drag-options";
+
+
+    const zonesColumn = document.createElement("div");
+
+    zonesColumn.className = "drop-zones";
+
+
+    let currentAnswers = answers[question.n] || {};
+
+
+    /* Opciones disponibles */
+
+    const usedValues = Object.values(currentAnswers);
+
+    const options = [...new Set(
+        question.pairs.map(pair => pair[1])
+    )];
+
+
+    options.forEach(option => {
+
+        const item = document.createElement("div");
+
+        item.className = "drag-item";
+
+        item.textContent = option;
+
+        item.dataset.value = option;
+
+        /*
+         * Soporte para mouse.
+         */
+
+        item.draggable = true;
+
+        item.addEventListener("dragstart", event => {
+
+            event.dataTransfer.setData(
+                "text/plain",
+                option
+            );
+
+            item.classList.add("dragging");
+
+        });
+
+        item.addEventListener("dragend", () => {
+
+            item.classList.remove("dragging");
+
+        });
+
+
+        /*
+         * Soporte táctil para iPhone / iPad / Android.
+         */
+
+        item.addEventListener("pointerdown", event => {
+
+            touchDragValue = option;
+
+            touchDragItem = item;
+
+            item.classList.add("dragging");
+
+            event.preventDefault();
+
+        });
+
+
+        optionsColumn.appendChild(item);
+
+    });
+
+
+    /* Zonas */
+
+    question.pairs.forEach((pair, index) => {
+
+        const definition = pair[0];
+
+        const correctValue = pair[1];
+
+        const zone = document.createElement("div");
+
+        zone.className = "drop-zone";
+
+        zone.dataset.index = index;
+
+
+        const title = document.createElement("div");
+
+        title.className = "drop-title";
+
+        title.textContent =
+            definition;
+
+
+        const content = document.createElement("div");
+
+        content.className = "drop-content";
+
+
+        const selected =
+            currentAnswers[index];
+
+
+        if (selected) {
+
+            content.textContent = selected;
+
+            const remove = document.createElement("button");
+
+            remove.className = "remove-answer";
+
+            remove.textContent = "Quitar";
+
+            remove.onclick = event => {
+
+                event.stopPropagation();
+
+                delete currentAnswers[index];
+
+                answers[question.n] =
+                    currentAnswers;
+
+                renderQuestion();
+
+            };
+
+            content.appendChild(remove);
+
+        } else {
+
+            content.textContent =
+                "Suelta aquí";
+
+        }
+
+
+        zone.appendChild(title);
+
+        zone.appendChild(content);
+
+
+        /*
+         * Mouse drag.
+         */
+
+        zone.addEventListener("dragover", event => {
+
+            event.preventDefault();
+
+            zone.classList.add("drag-over");
+
+        });
+
+        zone.addEventListener("dragleave", () => {
+
+            zone.classList.remove("drag-over");
+
+        });
+
+        zone.addEventListener("drop", event => {
+
+            event.preventDefault();
+
+            zone.classList.remove("drag-over");
+
+            const value =
+                event.dataTransfer.getData("text/plain");
+
+            assignDragAnswer(
+                question,
+                index,
+                value
+            );
+
+        });
+
+
+        /*
+         * Soporte táctil.
+         */
+
+        zone.addEventListener("pointermove", event => {
+
+            if (!touchDragValue) {
+                return;
+            }
+
+            zone.classList.add("drag-over");
+
+        });
+
+
+        zonesColumn.appendChild(zone);
+
+    });
+
+
+    container.appendChild(optionsColumn);
+
+    container.appendChild(zonesColumn);
+
+    wrapper.appendChild(container);
+
+    answerArea.appendChild(wrapper);
+
+}
+
+
+/* =========================================================
+   DRAG TÁCTIL
+========================================================= */
+
+let touchDragValue = null;
+
+let touchDragItem = null;
+
+
+document.addEventListener("pointermove", event => {
+
+    if (!touchDragValue) {
+        return;
+    }
+
+    event.preventDefault();
+
+    const element =
+        document.elementFromPoint(
+            event.clientX,
+            event.clientY
+        );
+
+    document
+        .querySelectorAll(".drop-zone")
+        .forEach(zone => {
+
+            zone.classList.remove("drag-over");
+
+        });
+
+    const zone =
+        element &&
+        element.closest(".drop-zone");
+
+    if (zone) {
+
+        zone.classList.add("drag-over");
+
+    }
+
+}, { passive: false });
+
+
+document.addEventListener("pointerup", event => {
+
+    if (!touchDragValue) {
+        return;
+    }
+
+    const value = touchDragValue;
+
+    const element =
+        document.elementFromPoint(
+            event.clientX,
+            event.clientY
+        );
+
+    const zone =
+        element &&
+        element.closest(".drop-zone");
+
+
+    if (zone) {
+
+        const question =
+            questions[currentQuestion];
+
+        const index =
+            Number(zone.dataset.index);
+
+        assignDragAnswer(
+            question,
+            index,
+            value
+        );
+
+    }
+
+
+    if (touchDragItem) {
+
+        touchDragItem.classList.remove("dragging");
+
+    }
+
+
+    document
+        .querySelectorAll(".drop-zone")
+        .forEach(zone => {
+
+            zone.classList.remove("drag-over");
+
+        });
+
+
+    touchDragValue = null;
+
+    touchDragItem = null;
+
+});
+
+
+/* =========================================================
+   GUARDAR RESPUESTA DRAG
+========================================================= */
+
+function assignDragAnswer(
+    question,
+    index,
+    value
+) {
+
+    if (!answers[question.n]) {
+
+        answers[question.n] = {};
+
+    }
+
+
+    const current =
+        answers[question.n];
+
+
+    /*
+     * Si el valor ya estaba colocado en otra definición,
+     * lo movemos.
+     */
+
+    Object.keys(current).forEach(key => {
+
+        if (current[key] === value) {
+
+            delete current[key];
+
+        }
+
+    });
+
+
+    current[index] = value;
+
+
+    answers[question.n] = current;
+
+
+    renderQuestion();
+
+}
+
+
+/* =========================================================
+   ANTERIOR
+========================================================= */
+
+function previousQuestion() {
+
+    if (currentQuestion <= 0) {
+        return;
+    }
+
+    currentQuestion--;
+
+    renderQuestion();
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+}
+
+
+/* =========================================================
+   SIGUIENTE
+========================================================= */
+
+function nextQuestion() {
+
+    if (
+        currentQuestion ===
+        questions.length - 1
+    ) {
+
+        openFinishModal();
+
+        return;
+
+    }
+
+
+    currentQuestion++;
+
+    renderQuestion();
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+function openFinishModal() {
+
+    const answered =
+        questions.filter(isAnswered).length;
+
+    const blank =
+        questions.length - answered;
+
+
+    const message =
+        blank === 0
+            ? "Has respondido todas las preguntas. ¿Quieres finalizar?"
+            : `Has respondido ${answered} de ${questions.length}. Te quedan ${blank} sin responder. ¿Quieres finalizar de todos modos?`;
+
+
+    document.getElementById(
+        "finishMessage"
+    ).textContent = message;
+
+
+    document.getElementById(
+        "finishModal"
+    ).style.display = "flex";
+
+}
+
+
+function closeFinishModal() {
+
+    document.getElementById(
+        "finishModal"
+    ).style.display = "none";
+
+}
+
+
+/* =========================================================
+   FINALIZAR
+========================================================= */
+
+function submitExam() {
+
+    submitted = true;
+
+    closeFinishModal();
+
+    examScreen.style.display = "none";
+
+    resultsScreen.style.display = "block";
+
+    generateResults();
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+}
+
+
+/* =========================================================
+   RESULTADOS
+========================================================= */
+
+function generateResults() {
+
+    let correct = 0;
+
+    let wrong = 0;
+
+    let blank = 0;
+
+
+    questions.forEach(question => {
+
+        const result =
+            evaluateQuestion(question);
+
+
+        if (result === "correct") {
+
+            correct++;
+
+        } else if (result === "wrong") {
+
+            wrong++;
+
+        } else {
+
+            blank++;
+
+        }
+
+    });
+
+
+    const percentage =
+        Math.round(
+            (correct / questions.length) * 100
+        );
+
+
+    document.getElementById(
+        "scoreCorrect"
+    ).textContent = correct;
+
+
+    document.getElementById(
+        "scoreWrong"
+    ).textContent = wrong;
+
+
+    document.getElementById(
+        "scoreBlank"
+    ).textContent = blank;
+
+
+    document.getElementById(
+        "scorePercent"
+    ).textContent = percentage + "%";
+
+
+    generateReview();
+
+}
+
+
+/* =========================================================
+   EVALUAR
+========================================================= */
+
+function evaluateQuestion(question) {
+
+    if (!isAnswered(question)) {
+
+        return "blank";
+
+    }
+
+
+    if (question.type === "vf") {
+
+        return answers[question.n] === question.answer
+            ? "correct"
+            : "wrong";
+
+    }
+
+
+    if (question.type === "mc") {
+
+        return answers[question.n] === question.answer
+            ? "correct"
+            : "wrong";
+
+    }
+
+
+    if (question.type === "drag") {
+
+        const userAnswers =
+            answers[question.n] || {};
+
+
+        let allCorrect = true;
+
+
+        question.pairs.forEach(
+            (pair, index) => {
+
+                if (
+                    userAnswers[index] !== pair[1]
+                ) {
+
+                    allCorrect = false;
+
+                }
+
+            }
+        );
+
+
+        return allCorrect
+            ? "correct"
+            : "wrong";
+
+    }
+
+}
+
+
+/* =========================================================
+   REVISIÓN
+========================================================= */
+
+function generateReview() {
+
+    const review =
+        document.getElementById("review");
+
+
+    review.innerHTML = "";
+
+
+    questions.forEach(question => {
+
+        const result =
+            evaluateQuestion(question);
+
+
+        const box =
+            document.createElement("div");
+
+
+        box.className =
+            `review-question ${result}`;
+
+
+        const number =
+            document.createElement("div");
+
+        number.className =
+            "review-number";
+
+        number.textContent =
+            `Pregunta ${question.n}`;
+
+
+        const text =
+            document.createElement("div");
+
+        text.className =
+            "review-text";
+
+        text.textContent =
+            question.text;
+
+
+        box.appendChild(number);
+
+        box.appendChild(text);
+
+
+        /*
+         * Verdadero/Falso
+         */
+
+        if (question.type === "vf") {
+
+            const user =
+                document.createElement("div");
+
+            user.className =
+                "review-answer";
+
+            user.innerHTML =
+                `<strong>Tu respuesta:</strong> ${
+                    answers[question.n] === undefined
+                        ? "Sin responder"
+                        : answers[question.n]
+                            ? "Verdadero"
+                            : "Falso"
+                }`;
+
+
+            const correctAnswer =
+                document.createElement("div");
+
+            correctAnswer.className =
+                "review-answer";
+
+            correctAnswer.innerHTML =
+                `<strong>Respuesta correcta:</strong> ${
+                    question.answer
+                        ? "Verdadero"
+                        : "Falso"
+                }`;
+
+
+            box.appendChild(user);
+
+            box.appendChild(correctAnswer);
+
+        }
+
+
+        /*
+         * Selección múltiple
+         */
+
+        if (question.type === "mc") {
+
+            const userIndex =
+                answers[question.n];
+
+
+            const userText =
+                userIndex === undefined
+                    ? "Sin responder"
+                    : question.options[userIndex];
+
+
+            const user =
+                document.createElement("div");
+
+            user.className =
+                "review-answer";
+
+            user.innerHTML =
+                `<strong>Tu respuesta:</strong> ${
+                    escapeHTML(userText)
+                }`;
+
+
+            const correctAnswer =
+                document.createElement("div");
+
+            correctAnswer.className =
+                "review-answer";
+
+            correctAnswer.innerHTML =
+                `<strong>Respuesta correcta:</strong> ${
+                    escapeHTML(
+                        question.options[
+                            question.answer
+                        ]
+                    )
+                }`;
+
+
+            box.appendChild(user);
+
+            box.appendChild(correctAnswer);
+
+        }
+
+
+        /*
+         * Arrastrar
+         */
+
+        if (question.type === "drag") {
+
+            const userAnswers =
+                answers[question.n] || {};
+
+
+            question.pairs.forEach(
+                (pair, index) => {
+
+                    const userValue =
+                        userAnswers[index];
+
+
+                    const row =
+                        document.createElement("div");
+
+                    row.className =
+                        "review-answer";
+
+
+                    row.innerHTML =
+                        `<strong>Definición:</strong> ${
+                            escapeHTML(pair[0])
+                        }<br>
+                        <strong>Tu respuesta:</strong> ${
+                            userValue
+                                ? escapeHTML(userValue)
+                                : "Sin responder"
+                        }<br>
+                        <strong>Correcta:</strong> ${
+                            escapeHTML(pair[1])
+                        }`;
+
+
+                    box.appendChild(row);
+
+                }
+            );
+
+        }
+
+
+        review.appendChild(box);
+
+    });
+
+}
+
+
+/* =========================================================
+   ESCAPAR HTML
+========================================================= */
+
+function escapeHTML(value) {
+
+    if (value === null || value === undefined) {
+
+        return "";
+
+    }
+
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+}
+
+
+/* =========================================================
+   REINICIAR
+========================================================= */
+
+function restartExam() {
+
+    submitted = false;
+
+    answers = {};
+
+    currentQuestion = 0;
+
+    resultsScreen.style.display = "none";
+
+    examScreen.style.display = "block";
+
+    buildQuestionGrid();
+
+    renderQuestion();
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+}
+
+
+/* =========================================================
+   PROTECCIONES BÁSICAS
+========================================================= */
+
+document.addEventListener(
+    "contextmenu",
+    event => {
+
+        if (!submitted) {
+
+            event.preventDefault();
+
+        }
+
+    }
+);
+
+
+document.addEventListener(
+    "copy",
+    event => {
+
+        if (!submitted) {
+
+            event.preventDefault();
+
+        }
+
+    }
+);
+
+
+document.addEventListener(
+    "cut",
+    event => {
+
+        if (!submitted) {
+
+            event.preventDefault();
+
+        }
+
+    }
+);
+
+
+document.addEventListener(
+    "paste",
+    event => {
+
+        if (!submitted) {
+
+            event.preventDefault();
+
+        }
+
+    }
+);
+
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (submitted) {
+            return;
+        }
+
+
+        const key =
+            event.key.toLowerCase();
+
+
+        if (
+            (event.ctrlKey || event.metaKey) &&
+            ["c", "x", "v"].includes(key)
+        ) {
+
+            event.preventDefault();
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>
